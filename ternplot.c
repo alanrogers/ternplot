@@ -7,7 +7,6 @@
 float u(float x, float y);
 void beginplot(char *labx, char *laby, char *labz, float inches, FILE *ofp);
 void endpicture(FILE *ofp);
-void endfigure(FILE *ofp);
 void usage(void);
 
 
@@ -37,8 +36,6 @@ void beginplot(char *labx, char *laby, char *labz, float inches, FILE *ofp)
 
   sidelength = 2.0/sqrt(3.0);  // length of a side
   fputs(
-"\\begin{figure}\n"
-"\\begin{center}\n"
 "\\mbox{%\n"
 "\\beginpicture\n", ofp);
   fprintf(ofp,
@@ -62,12 +59,7 @@ void beginplot(char *labx, char *laby, char *labz, float inches, FILE *ofp)
 
 /* end PicTeX picture */
 void endpicture(FILE *ofp) {
-  fputs("\\endpicture}\n\\end{center}\n", ofp);
-}
-
-/* end LaTeX figure */
-void endfigure(FILE *ofp) {
-  fputs("\\end{figure}\n", ofp);
+  fputs("\\endpicture}\n", ofp);
 }
 
 void usage(void) {
@@ -80,7 +72,7 @@ void usage(void) {
   exit(1);
 }
 
-void main(int argc, char **argv) {
+int main(int argc, char **argv) {
   int i;
   float inches = 2.0;  /* size of plot */
   float x, y;
@@ -93,7 +85,6 @@ void main(int argc, char **argv) {
 
   for(i=1; i<argc; i++)
   {
-    fprintf(stderr,"Doing arg %d\n", i);
     if(argv[i][0] == '-')
     {
       switch(argv[i][1])
@@ -122,8 +113,9 @@ void main(int argc, char **argv) {
     fprintf(ofp, "  %f %f %% %f\n", u(x,y), y, x);
   fprintf(ofp,"/\n");
   endpicture(ofp);
-  endfigure(ofp);
   putc('\n', ofp);
+
+  return 0;
 }
 
 
